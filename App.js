@@ -27,7 +27,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text>New App!</Text>
+      <Text style={styles.text}>New App!</Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -39,5 +39,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    fontFamily: 'open-sans-bold'
   },
+  text:{
+    fontFamily: 'open-sans-bold'
+  }
 });

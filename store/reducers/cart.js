@@ -51,10 +51,6 @@ export default (state = initialState, action) => {
         updatedCartItems = {...state.items};
         delete updatedCartItems[action.pid];
       };
-
-      console.log("total amount: " + state.totalAmount);
-      console.log("price: " + selectedCartItem.productPrice);
-
       return {
         ...state,
         items: updatedCartItems,

@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
-    height: "58%",
+    height: "60%",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     overflow: "hidden",

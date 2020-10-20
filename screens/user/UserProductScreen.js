@@ -12,6 +12,10 @@ const UserProductScreen = props => {
   const userProducts = useSelector(state => state.products.userProducts);
   const dispatch = useDispatch();
 
+  const editProductHandler = (id) => {
+    props.navigation.navigate('EditProduct', {productId: id});
+  }
+
   return (
     <FlatList
       data={userProducts}
@@ -21,9 +25,13 @@ const UserProductScreen = props => {
           image={itemData.item.imageUrl}
           title={itemData.item.title}
           price={itemData.item.price}
-          onSelect={() => {}}
+          onSelect={() => {
+            editProductHandler(itemData.item.id)
+          }}
         >
-          <Button title="Edit" color={Colors.primary} onPress={() => {}} />
+          <Button title="Edit" color={Colors.primary} onPress={() => {
+            editProductHandler(itemData.item.id)
+          }} />
           <Button title="Delete" onPress={() => {
             dispatch(productsActions.deleteProduct(itemData.item.id))
           }} />
@@ -43,6 +51,16 @@ UserProductScreen.navigationOptions  = navData => {
         onPress={() => {
           navData.navigation.toggleDrawer()
         }}
+      />
+    </HeaderButtons>,
+    headerRight: () => <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+      <Item
+        title='Add'
+        iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'}
+        //8.181 - Still navigating to the EditProduct screen
+        //    BUT Not passing in any parameters (since it is a new product)
+        //    Will do this in future sections
+        onPress={() => {navData.navigation.navigate('EditProduct')}}
       />
     </HeaderButtons>
   }

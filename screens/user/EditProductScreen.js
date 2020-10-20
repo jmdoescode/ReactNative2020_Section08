@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {Platform, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {useSelector} from "react-redux";
 import {HeaderButtons, Item} from "react-navigation-header-buttons";
@@ -14,6 +14,15 @@ const EditProductScreen = props => {
   const [imageUrl, setImageUrl] = useState(editedProduct ? editedProduct.imageUrl : '');
   const [price, setPrice] = useState(''); //The price should not be changeable
   const [description, setDescription] = useState(editedProduct ? editedProduct.description : '');
+
+  const submitHandler = useCallback(() => {
+    console.log('Submitting!');
+  }, []); //8.183 - No dependencies so that this function is not recreated everytime the component re-renders
+  //  to avoid an infinite loop
+
+  useEffect(() => {
+    props.navigation.setParams({ submit: submitHandler });
+  }, [submitHandler]);
 
   return (
     <ScrollView>
@@ -57,6 +66,8 @@ const EditProductScreen = props => {
 };
 
 EditProductScreen.navigationOptions = navData => {
+  const submitFn = navData.navigation.getParam('submit');
+
   return {
     headerTitle: navData.navigation.getParam('productId')
       ? 'Edit Product'
@@ -65,7 +76,7 @@ EditProductScreen.navigationOptions = navData => {
       <Item
         title='Save'
         iconName={Platform.OS === 'android' ? 'md-save' : 'ios-save'}
-        onPress={() => {}}
+        onPress={submitFn}
       />
     </HeaderButtons>
   }

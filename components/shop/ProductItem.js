@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
-    height: "60%",
+    height: "58%",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     overflow: "hidden",
@@ -64,11 +64,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   actions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    height: "23%",
-    padding: 20
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: '23%',
+    paddingHorizontal: 20
   },
   touchable: {
     borderRadius: 10,

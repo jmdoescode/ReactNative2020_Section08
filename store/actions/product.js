@@ -1,4 +1,6 @@
 export const DELETE_PRODUCT = 'DELETE_PRODUCT';
+export const CREATE_PRODUCT = 'CREATE_PRODUCT';
+export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
 
 export const deleteProduct = productId  => {
   return {
@@ -6,3 +8,29 @@ export const deleteProduct = productId  => {
     pid: productId
   }
 };
+
+export const createProduct = (title, imageUrl, description, price) => {
+  return {
+    type: CREATE_PRODUCT,
+    //8.184 - modern javascript notation if variable is same name as the data model param
+    //    then you just need to put variable name instead of title = title
+    productData: {
+      title,
+      imageUrl,
+      description,
+      price
+    }
+  }
+};
+
+export const updateProduct = (id, title, imageUrl, description,) => {
+  return {
+    type: UPDATE_PRODUCT,
+    pid: id,
+    productData: {
+      title,
+      imageUrl,
+      description
+    }
+  }
+}

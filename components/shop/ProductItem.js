@@ -1,6 +1,7 @@
 import React from "react";
 import {View, Text, Image, StyleSheet, Platform} from "react-native";
 import {TouchableOpacity, TouchableNativeFeedback} from "react-native";
+import Card from "../UI/Card";
 
 const ProductItem = (props) => {
   let TouchableComp = TouchableOpacity;
@@ -8,7 +9,7 @@ const ProductItem = (props) => {
   if (Platform.OS === 'android' && Platform.version >= 21) TouchableComp = TouchableNativeFeedback;
 
   return (
-    <View style={styles.product}>
+    <Card style={styles.product}>
       <TouchableComp style={styles.touchable} onPress={props.onSelect} useForeground>
         <View style={styles.imageContainer}>
           <Image style={styles.image} source={{uri: props.image}}/>
@@ -21,18 +22,12 @@ const ProductItem = (props) => {
           {props.children}
         </View>
       </TouchableComp>
-    </View>
+    </Card>
   );
 };
 
 const styles = StyleSheet.create({
   product: {
-    shadowColor: "black",
-    shadowOpacity: 0.26,
-    shadowOffset: {width: 0, height: 2},
-    elevation: 5,
-    borderRadius: 10,
-    backgroundColor: "white",
     margin: 20,
     height: 300,
     overflow: 'hidden'

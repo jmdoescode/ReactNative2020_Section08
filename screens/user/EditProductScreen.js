@@ -23,7 +23,9 @@ const EditProductScreen = props => {
     } else {
       //8.184 - adding a (+)on price converts it to a number
       dispatch(productsActions.createProduct(title, imageUrl, description, +price))
-    }
+    };
+
+    props.navigation.goBack();
   }, [dispatch, prodId, title, description, imageUrl, price]);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
-import React, {useEffect, useCallback, useReducer} from 'react';
-import {Platform, ScrollView, StyleSheet, Text, TextInput, View, Alert} from 'react-native';
-import {useSelector, useDispatch} from "react-redux";
+import React, {useCallback, useEffect, useReducer} from 'react';
+import {Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View} from 'react-native';
+import {useDispatch, useSelector} from "react-redux";
 import {HeaderButtons, Item} from "react-navigation-header-buttons";
 import CustomHeaderButton from "../../components/UI/HeaderButton";
 import * as productsActions from "./../../store/actions/product";
@@ -9,7 +9,7 @@ import Input from "../../components/UI/Input";
 const FORM_INPUT_UPDATE = 'UPDATE'
 
 const formReducer = (state, action) => {
-  if(action.type === FORM_INPUT_UPDATE) {
+  if (action.type === FORM_INPUT_UPDATE) {
     const updatedValues = {
       ...state.inputValues, //9.192 - copies all keyValuePairs
       [action.inputId]: action.value //9.192 - from textChangeHandler > dispatchFormState
@@ -19,10 +19,11 @@ const formReducer = (state, action) => {
       [action.inputId]: action.isValid
     };
     let updatedFormIsValid = true;
-    for(const key in updatedValidities) {
+    for (const key in updatedValidities) {
       //9.192 - js that sets formIsValid to false and stops if any of the values are false after the &&
       updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
-    };
+    }
+    ;
 
     return {
       ...state,
@@ -62,7 +63,7 @@ const EditProductScreen = props => {
   );
 
   const submitHandler = useCallback(() => {
-    if(!formState.formIsValid){
+    if (!formState.formIsValid) {
       Alert.alert('Wrong Input', 'Please check the errors in the form', [
         {text: "Okay"}
       ]);
@@ -89,7 +90,7 @@ const EditProductScreen = props => {
   //9.192 - updated to formState - validity is updated for every keystroke and so should this handler
 
   useEffect(() => {
-    props.navigation.setParams({ submit: submitHandler });
+    props.navigation.setParams({submit: submitHandler});
   }, [submitHandler]);
 
   //9.194 - renamed from textChangeHandler to be more fitting
@@ -105,61 +106,64 @@ const EditProductScreen = props => {
   }, [dispatchFormState]); //9.194 - should never be rebuilt bc the logic never changes
 
   return (
-    <ScrollView>
-      <View style={styles.form}>
-        <Input
-          label="Title"
-          errorText="Please enter a valid title"
-          keyboardType="default"
-          autoCapitalize="sentences"
-          autoCorrect
-          returnKeyType='next'
-          id="title"
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.title : ''}
-          initiallyValid = {!!editedProduct}
-          required
-        />
-        <Input
-          label="Image Url"
-          errorText="Please enter a valid image url"
-          returnKeyType='next'
-          id="imageUrl"
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.imageUrl : ''}
-          initiallyValid = {!!editedProduct}
-          required
-        />
-        {/*8.182 - Price is not editable  */}
-        {editedProduct ? null : (
+    //9.195 - IMPORTANT: Don't forget the {FLEX : 1} otherwise it will not take up the whole screen
+    <KeyboardAvoidingView style={{flex: 1}} behavior="padding" keyboardVerticalOffset={100}>
+      <ScrollView>
+        <View style={styles.form}>
           <Input
-            label="Price"
-            errorText="Please enter a valid price"
-            keyboardType='decimal-pad'
+            label="Title"
+            errorText="Please enter a valid title"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
             returnKeyType='next'
-            id="price"
+            id="title"
             onInputChange={inputChangeHandler}
-            //9.194 - will never have initial value and will never be intially valid
+            initialValue={editedProduct ? editedProduct.title : ''}
+            initiallyValid={!!editedProduct}
             required
-            min={0.1}
           />
-        )}
-        <Input
-          label="Description"
-          errorText="Please enter a valid description"
-          autoCapitalize="sentences"
-          autocorrect
-          multiline
-          numberOfLines={3}
-          id="description"
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.description : ''}
-          initiallyValid = {!!editedProduct}
-          required
-          minLength={5}
-        />
-      </View>
-    </ScrollView>
+          <Input
+            label="Image Url"
+            errorText="Please enter a valid image url"
+            returnKeyType='next'
+            id="imageUrl"
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.imageUrl : ''}
+            initiallyValid={!!editedProduct}
+            required
+          />
+          {/*8.182 - Price is not editable  */}
+          {editedProduct ? null : (
+            <Input
+              label="Price"
+              errorText="Please enter a valid price"
+              keyboardType='decimal-pad'
+              returnKeyType='next'
+              id="price"
+              onInputChange={inputChangeHandler}
+              //9.194 - will never have initial value and will never be intially valid
+              required
+              min={0.1}
+            />
+          )}
+          <Input
+            label="Description"
+            errorText="Please enter a valid description"
+            autoCapitalize="sentences"
+            autocorrect
+            multiline
+            numberOfLines={3}
+            id="description"
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.description : ''}
+            initiallyValid={!!editedProduct}
+            required
+            minLength={5}
+          />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 };
 

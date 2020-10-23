@@ -7,29 +7,40 @@ export const SET_PRODUCTS = 'SET_PRODUCTS';
 
 export const fetchProducts = () => {
   return async dispatch => {
-    const response = await fetch('https://rn-complete-guide-dc18b.firebaseio.com/products.json');
-    const responseData = await response.json();
+    try {
+      const response = await fetch('https://rn-complete-guide-dc18b.firebaseio.com/product.jon');
+      //10.202 - fetch api does not throw error if 400 & 500 status code range occurs
+      if (!response.ok) {
+        throw new Error('Something went wrong!');
+      }
 
-    //console.log(responseData); //10.202 - returns an object
-    const loadedProducts = [];
+      const responseData = await response.json();
 
-    //10.202 - since responseData returns an object, you need to transform it to an Array
-    //    each object is matched to it's uniqueID (key)
-    for (const key in responseData){
-      loadedProducts.push(new Product(
-        key,
-        'u1',
-        responseData[key].title,
-        responseData[key].imageUrl,
-        responseData[key].description,
-        responseData[key].price
-      ))
+      //console.log(responseData); //10.202 - returns an object
+      const loadedProducts = [];
+
+      //10.202 - since responseData returns an object, you need to transform it to an Array
+      //    each object is matched to it's uniqueID (key)
+      for (const key in responseData) {
+        loadedProducts.push(new Product(
+          key,
+          'u1',
+          responseData[key].title,
+          responseData[key].imageUrl,
+          responseData[key].description,
+          responseData[key].price
+        ))
+      }
+
+      dispatch({
+        type: SET_PRODUCTS,
+        products: loadedProducts
+      });
+    } catch (err) {
+      //TODO: send to analytics server
+
+      throw err;
     }
-
-    dispatch({
-      type: SET_PRODUCTS,
-      products: loadedProducts
-    })
   }
 }
 

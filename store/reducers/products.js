@@ -11,7 +11,8 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case CREATE_PRODUCT:
       const newProduct = new Product(
-        new Date().toString(), //8.184 - temporary
+        //new Date().toString(), //8.184 - temporary
+        action.product.id, //10.201 - update to use the id that is coming from firebase
         'u1', //8.184 - temporary
         action.productData.title,
         action.productData.imageUrl,

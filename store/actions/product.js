@@ -8,7 +8,7 @@ export const SET_PRODUCTS = 'SET_PRODUCTS';
 export const fetchProducts = () => {
   return async dispatch => {
     try {
-      const response = await fetch('https://rn-complete-guide-dc18b.firebaseio.com/product.jon');
+      const response = await fetch('https://rn-complete-guide-dc18b.firebaseio.com/product.json');
       //10.202 - fetch api does not throw error if 400 & 500 status code range occurs
       if (!response.ok) {
         throw new Error('Something went wrong!');

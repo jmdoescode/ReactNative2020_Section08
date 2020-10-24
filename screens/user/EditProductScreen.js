@@ -50,7 +50,7 @@ const EditProductScreen = props => {
         title: editedProduct ? editedProduct.title : '',
         imageUrl: editedProduct ? editedProduct.imageUrl : '',
         description: editedProduct ? editedProduct.description : '',
-        price: ''
+        price: editedProduct ? editedProduct.price : '',
       },
       inputValidities: {
         title: !!editedProduct, //9.191 - same as editedProduct ? true : false

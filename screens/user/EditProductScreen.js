@@ -1,10 +1,11 @@
-import React, {useCallback, useEffect, useReducer} from 'react';
-import {Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View} from 'react-native';
+import React, {useCallback, useEffect, useReducer, useState} from 'react';
+import {Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
 import {useDispatch, useSelector} from "react-redux";
 import {HeaderButtons, Item} from "react-navigation-header-buttons";
 import CustomHeaderButton from "../../components/UI/HeaderButton";
 import * as productsActions from "./../../store/actions/product";
 import Input from "../../components/UI/Input";
+import Colors from "../../constants/Colors";
 
 const FORM_INPUT_UPDATE = 'UPDATE'
 
@@ -37,6 +38,9 @@ const formReducer = (state, action) => {
 }
 
 const EditProductScreen = props => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+
   const prodId = props.navigation.getParam('productId');
   const editedProduct = useSelector(state =>
     state.products.userProducts.find(prod => prod.id === prodId)
@@ -62,7 +66,15 @@ const EditProductScreen = props => {
     }
   );
 
-  const submitHandler = useCallback(() => {
+  useEffect(() => {
+    if(error) {
+      Alert.alert('An Error occured', error, [
+        {text: 'Okay'}
+      ]);
+    }
+  }, [error])
+
+  const submitHandler = useCallback(async () => {
     if (!formState.formIsValid) {
       Alert.alert('Wrong Input', 'Please check the errors in the form', [
         {text: "Okay"}
@@ -70,22 +82,31 @@ const EditProductScreen = props => {
       return;
     }
 
-    if (editedProduct) {
-      dispatch(productsActions.updateProduct(
-        prodId,
-        formState.inputValues.title,
-        formState.inputValues.imageUrl,
-        formState.inputValues.description))
-    } else {
-      //8.184 - adding a (+)on price converts it to a number
-      dispatch(productsActions.createProduct(
-        formState.inputValues.title,
-        formState.inputValues.imageUrl,
-        formState.inputValues.description,
-        +formState.inputValues.price))
+    setError(false);
+    setIsLoading(true);
+
+    try{
+      if (editedProduct) {
+        await dispatch(productsActions.updateProduct(
+          prodId,
+          formState.inputValues.title,
+          formState.inputValues.imageUrl,
+          formState.inputValues.description))
+      } else {
+        //8.184 - adding a (+)on price converts it to a number
+        await dispatch(productsActions.createProduct(
+          formState.inputValues.title,
+          formState.inputValues.imageUrl,
+          formState.inputValues.description,
+          +formState.inputValues.price))
+      }
+
+      props.navigation.goBack();
+    } catch (err) {
+      setError(err.message);
     }
 
-    props.navigation.goBack();
+    setIsLoading(false);
   }, [dispatch, prodId, formState]);
   //9.192 - updated to formState - validity is updated for every keystroke and so should this handler
 
@@ -104,6 +125,13 @@ const EditProductScreen = props => {
       inputId: inputIdentifier //9.192
     });
   }, [dispatchFormState]); //9.194 - should never be rebuilt bc the logic never changes
+
+
+  if(isLoading) {
+    return <View style={styles.centered}>
+      <ActivityIndicator size='large' color={Colors.primary} />
+    </View>
+  }
 
   return (
     //9.195 - IMPORTANT: Don't forget the {FLEX : 1} otherwise it will not take up the whole screen
@@ -188,6 +216,11 @@ const styles = StyleSheet.create({
   form: {
     margin: 20
   },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });
 
 export default EditProductScreen;

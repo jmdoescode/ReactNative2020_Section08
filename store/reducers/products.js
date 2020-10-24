@@ -3,8 +3,8 @@ import {CREATE_PRODUCT, DELETE_PRODUCT, SET_PRODUCTS, UPDATE_PRODUCT} from "../a
 import Product from "../../models/product";
 
 const initialState = {
-  availableProducts: PRODUCTS,
-  userProducts: PRODUCTS.filter(prod => prod.ownerId === 'u1')
+  availableProducts: [],
+  userProducts: []
 }
 
 export default (state = initialState, action) => {

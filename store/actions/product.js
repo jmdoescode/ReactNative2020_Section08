@@ -49,6 +49,10 @@ export const deleteProduct = productId  => {
       method: 'DELETE',
     });
 
+    if (!response.ok) {
+      throw new Error('Something went wrong!');
+    }
+
     dispatch({
       type: DELETE_PRODUCT,
       pid: productId
@@ -104,6 +108,10 @@ export const updateProduct = (id, title, imageUrl, description,) => {
         imageUrl
       })
     });
+
+    if (!response.ok) {
+      throw new Error('Something went wrong!');
+    }
 
     dispatch({
       type: UPDATE_PRODUCT,

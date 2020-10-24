@@ -38,17 +38,22 @@ export const fetchProducts = () => {
       });
     } catch (err) {
       //TODO: send to analytics server
-
       throw err;
     }
   }
 }
 
 export const deleteProduct = productId  => {
-  return {
-    type: DELETE_PRODUCT,
-    pid: productId
-  }
+  return async dispatch => {
+    const response = await fetch(`https://rn-complete-guide-dc18b.firebaseio.com/products/${productId}.json`, {
+      method: 'DELETE',
+    });
+
+    dispatch({
+      type: DELETE_PRODUCT,
+      pid: productId
+    });
+  };
 };
 
 export const createProduct = (title, imageUrl, description, price) => {
@@ -71,8 +76,6 @@ export const createProduct = (title, imageUrl, description, price) => {
     //10.201 - this will return the data from firebase when we create a product
     const responseData = await response.json();
 
-    //console.log(responseData);
-
     dispatch({
         type: CREATE_PRODUCT,
         //8.184 - modern javascript notation if variable is same name as the data model param
@@ -89,13 +92,27 @@ export const createProduct = (title, imageUrl, description, price) => {
 };
 
 export const updateProduct = (id, title, imageUrl, description,) => {
-  return {
-    type: UPDATE_PRODUCT,
-    pid: id,
-    productData: {
-      title,
-      imageUrl,
-      description
-    }
-  }
-}
+  return async dispatch => {
+    const response = await fetch(`https://rn-complete-guide-dc18b.firebaseio.com/products/${id}.json`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        imageUrl
+      })
+    });
+
+    dispatch({
+      type: UPDATE_PRODUCT,
+      pid: id,
+      productData: {
+        title,
+        imageUrl,
+        description
+      }
+    });
+  };
+};

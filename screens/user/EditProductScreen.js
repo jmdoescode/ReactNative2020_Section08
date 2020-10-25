@@ -24,7 +24,6 @@ const formReducer = (state, action) => {
       //9.192 - js that sets formIsValid to false and stops if any of the values are false after the &&
       updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
     }
-    ;
 
     return {
       ...state,

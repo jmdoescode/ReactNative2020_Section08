@@ -6,9 +6,10 @@ export const ADD_ORDER = "ADD_ORDER";
 export const SET_ORDERS = 'SET_ORDERS';
 
 export const fetchOrders = () => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
-      const response = await fetch('https://rn-complete-guide-dc18b.firebaseio.com/orders/u1.json');
+      const userId = getState().auth.userId;
+      const response = await fetch(`https://rn-complete-guide-dc18b.firebaseio.com/orders/${userId}.json`);
       if (!response.ok) {
         throw new Error('Something went wrong!');
       }
@@ -18,7 +19,7 @@ export const fetchOrders = () => {
       for (const key in responseData) {
         loadedOrders.push(new Order(
           key,
-          responseData[key].items,
+          responseData[key].cartItems,
           responseData[key].totalAmount,
           new Date(responseData[key].date) //10.209 - Need date object not just the string
         ))
@@ -36,9 +37,11 @@ export const fetchOrders = () => {
 }
 
 export const addOrder = (cartItems, totalAmount) => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
     const date = new Date();
-    const response = await fetch('https://rn-complete-guide-dc18b.firebaseio.com/orders/u1.json', {
+    const response = await fetch(`https://rn-complete-guide-dc18b.firebaseio.com/orders/${userId}.json?auth=${token}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

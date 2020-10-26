@@ -13,14 +13,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         availableProducts: action.products,
-        userProducts: action.products.filter(prod => prod.ownerId === 'u1')
+        userProducts: action.userProducts
       };
 
     case CREATE_PRODUCT:
       const newProduct = new Product(
         //new Date().toString(), //8.184 - temporary
         action.productData.id, //10.201 - update to use the id that is coming from firebase
-        'u1', //8.184 - temporary
+        action.productData.ownerId,
         action.productData.title,
         action.productData.imageUrl,
         action.productData.description,

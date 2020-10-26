@@ -44,8 +44,9 @@ export const fetchProducts = () => {
 }
 
 export const deleteProduct = productId  => {
-  return async dispatch => {
-    const response = await fetch(`https://rn-complete-guide-dc18b.firebaseio.com/products/${productId}.json`, {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    const response = await fetch(`https://rn-complete-guide-dc18b.firebaseio.com/products/${productId}.json?auth=${token}`, {
       method: 'DELETE',
     });
 
@@ -62,8 +63,9 @@ export const deleteProduct = productId  => {
 
 export const createProduct = (title, imageUrl, description, price) => {
   //10.201 - using async await will make the entire action (createProduct) return a promise
-  return async dispatch => {
-    const response = await fetch('https://rn-complete-guide-dc18b.firebaseio.com/products.json', {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    const response = await fetch('https://rn-complete-guide-dc18b.firebaseio.com/products.json?auth=${token}', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -96,8 +98,10 @@ export const createProduct = (title, imageUrl, description, price) => {
 };
 
 export const updateProduct = (id, title, imageUrl, description,) => {
-  return async dispatch => {
-    const response = await fetch(`https://rn-complete-guide-dc18b.firebaseio.com/products/${id}.json`, {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    console.log("UPDATE - TOKEN: " + token);
+    const response = await fetch(`https://rn-complete-guide-dc18b.firebaseio.com/products/${id}.json?auth=${token}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'

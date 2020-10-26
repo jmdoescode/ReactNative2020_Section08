@@ -18,19 +18,21 @@ export const signup = (email, password) => {
       }
     );
 
-    if(!response.ok){
-      throw new Error('Something went wrong');
+    if (!response.ok) {
+      const errorResData = await response.json();
+      const errorId = errorResData.error.message;
+      let message = 'Something went wrong!';
+      if (errorId === 'EMAIL_EXISTS') {
+        message = 'This email exists already!';
+      }
+      throw new Error(message);
     }
 
-    const responseData = await response.json();
-    console.log(responseData);
-
-    dispatch({
-      type: SIGNUP,
-
-    })
+    const resData = await response.json();
+    console.log(resData);
+    dispatch({ type: SIGNUP });
   };
-}
+};
 
 export const login = (email, password) => {
   return async dispatch => {
@@ -49,17 +51,20 @@ export const login = (email, password) => {
       }
     );
 
-    if(!response.ok){
-      throw new Error('Something went wrong');
+    if (!response.ok) {
+      const errorResData = await response.json();
+      const errorId = errorResData.error.message;
+      let message = 'Something went wrong!';
+      if (errorId === 'EMAIL_NOT_FOUND') {
+        message = 'This email could not be found!';
+      } else if (errorId === 'INVALID_PASSWORD') {
+        message = 'This password is not valid!';
+      }
+      throw new Error(message);
     }
 
-    const responseData = await response.json();
-    console.log(responseData);
-    console.log("LOGIN");
-
-    dispatch({
-      type: LOGIN,
-
-    })
+    const resData = await response.json();
+    console.log(resData);
+    dispatch({ type: LOGIN });
   };
-}
+};

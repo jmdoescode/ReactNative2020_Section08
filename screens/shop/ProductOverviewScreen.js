@@ -34,14 +34,11 @@ const ProductOverviewScreen = props => {
   }, [dispatch, loadProducts]); //10.202 - dispatch is dependency so it runs only one time
 
   useEffect(() => {
-    const willFocusSub = props.navigation.addListener('willFocus', loadProducts);
-
-    //10.204 - useEffect can return a function & we will use this to clean up when component is destroyed
-    //    removes subscription when the component is unmounted
+    const unsubscribe = props.navigation.addListener('focus', loadProducts);
     return () => {
-      willFocusSub.remove();
+      unsubscribe();
     }
-  }, [loadProducts]); //10.204 - navigation listener added since DRAWER navigator is kept in memory
+  }, [loadProducts]); //15.287 - updated bc there is not drawer navigator anymore
 
   const selectItemHandler = (id, title) => {
     props.navigation.navigate("ProductDetail", {

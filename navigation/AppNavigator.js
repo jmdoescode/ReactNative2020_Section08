@@ -4,13 +4,20 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import {ProductsNavigator} from "./ShopNavigator";
 import ProductOverviewScreen from "../screens/shop/ProductOverviewScreen";
+import {ShopNavigator, AuthNavigator} from "./ShopNavigator";
+import StartupScreen from "../screens/StartupScreen";
 
 const AppNavigator = props => {
   const isAuth = useSelector(state => !!state.auth.token);
+  const didTryAutoLogin = useSelector(state => state.auth.didTryAutoLogin);
 
-  return <NavigationContainer>
-    <ProductsNavigator />
-  </NavigationContainer>
+  return (
+    <NavigationContainer>
+      {isAuth && <ShopNavigator />}
+      {!isAuth && didTryAutoLogin && <AuthNavigator />}
+      {!isAuth && !didTryAutoLogin && <StartupScreen />}
+    </NavigationContainer>
+  )
 }
 
 export default AppNavigator;

@@ -40,7 +40,8 @@ const EditProductScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
 
-  const prodId = props.navigation.getParam('productId');
+  //const prodId = props.navigation.getParam('productId');
+  const prodId = props.route.params ? props.route.params.productId : null;
   const editedProduct = useSelector(state =>
     state.products.userProducts.find(prod => prod.id === prodId)
   );
@@ -110,7 +111,16 @@ const EditProductScreen = props => {
   //9.192 - updated to formState - validity is updated for every keystroke and so should this handler
 
   useEffect(() => {
-    props.navigation.setParams({submit: submitHandler});
+    //props.navigation.setParams({submit: submitHandler});
+    props.navigation.setOptions({
+      headerRight: () => <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title='Save'
+          iconName={Platform.OS === 'android' ? 'md-save' : 'ios-save'}
+          onPress={submitFn}
+        />
+      </HeaderButtons>
+    })
   }, [submitHandler]);
 
   //9.194 - renamed from textChangeHandler to be more fitting
@@ -195,19 +205,14 @@ const EditProductScreen = props => {
 };
 
 export const editProductScreenOptions = navData => {
-  const submitFn = navData.navigation.getParam('submit');
+  const routeParams = navData.route.params ? navData.route.params : {};
 
   return {
-    headerTitle: navData.navigation.getParam('productId')
+    // headerTitle: navData.navigation.getParam('productId')
+    headerTitle: routeParams.productId
       ? 'Edit Product'
       : 'AddProduct',
-    headerRight: () => <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-      <Item
-        title='Save'
-        iconName={Platform.OS === 'android' ? 'md-save' : 'ios-save'}
-        onPress={submitFn}
-      />
-    </HeaderButtons>
+
   }
 }
 

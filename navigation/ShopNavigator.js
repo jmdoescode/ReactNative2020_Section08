@@ -47,7 +47,7 @@ export const ProductsNavigator = () => {
       options={productDetailScreenScreenOptions}
     />
     <ProductsStackNavigator.Screen
-      name='CartScreen'
+      name='Cart'
       component={CartScreen}
       options={cartScreenScreenOptions}
     />

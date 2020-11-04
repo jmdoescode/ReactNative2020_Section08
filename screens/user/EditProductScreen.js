@@ -117,7 +117,7 @@ const EditProductScreen = props => {
         <Item
           title='Save'
           iconName={Platform.OS === 'android' ? 'md-save' : 'ios-save'}
-          onPress={submitFn}
+          onPress={submitHandler}
         />
       </HeaderButtons>
     })

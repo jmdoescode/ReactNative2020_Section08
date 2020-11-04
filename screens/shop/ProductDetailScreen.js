@@ -6,7 +6,7 @@ import * as cartActions from './../../store/actions/cart';
 
 const ProductDetailScreen = props => {
   const selectedProduct = useSelector(state => state.products.availableProducts.find(
-    prod => prod.id === props.navigation.getParam("productId")
+    prod => prod.id === props.route.params.productId
   ));
   const dispatch = useDispatch();
 
@@ -26,7 +26,7 @@ const ProductDetailScreen = props => {
 
 export const screenOptions = navData => {
   return {
-    headerTitle: navData.navigation.getParam("productTitle")
+    headerTitle: navData.route.params.productTitle
   }
 }
 

@@ -21,6 +21,7 @@ export default (state = initialState, action) => {
         //new Date().toString(), //8.184 - temporary
         action.productData.id, //10.201 - update to use the id that is coming from firebase
         action.productData.ownerId,
+        action.productData.pushToken,
         action.productData.title,
         action.productData.imageUrl,
         action.productData.description,
@@ -39,6 +40,7 @@ export default (state = initialState, action) => {
       const updatedProduct = new Product(
         action.id,
         state.userProducts[userProductIndex].ownerId,
+        state.userProducts[userProductIndex].pushToken,
         action.productData.title,
         action.productData.imageUrl,
         action.productData.description,

@@ -1,4 +1,6 @@
 import Product from "../../models/product";
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 
 export const DELETE_PRODUCT = 'DELETE_PRODUCT';
 export const CREATE_PRODUCT = 'CREATE_PRODUCT';
@@ -27,6 +29,7 @@ export const fetchProducts = () => {
         loadedProducts.push(new Product(
           key,
           responseData[key].ownerId ? responseData[key].ownerId : null,
+          responseData[key].ownerPushToken,
           responseData[key].title,
           responseData[key].imageUrl,
           responseData[key].description,
@@ -67,6 +70,17 @@ export const deleteProduct = productId  => {
 export const createProduct = (title, imageUrl, description, price) => {
   //10.201 - using async await will make the entire action (createProduct) return a promise
   return async (dispatch, getState) => {
+    let pushToken;
+    let statusObj = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    if(statusObj.status !== 'granted') {
+      statusObj = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    }
+    if(statusObj.status !== 'granted'){
+      pushToken = null;
+    } else {
+      pushToken = (await Notifications.getExpoPushTokenAsync()).data;
+    }
+
     const token = getState().auth.token;
     const userId = getState().auth.userId;
     const response = await fetch(`https://rn-complete-guide-dc18b.firebaseio.com/products.json?auth=${token}`, {
@@ -79,7 +93,8 @@ export const createProduct = (title, imageUrl, description, price) => {
         description,
         imageUrl,
         price,
-        ownerId: userId
+        ownerId: userId,
+        ownerPushToken: pushToken
       })
     });
     //}).then(() => response...); //10.201 - then() is replaced by async await
@@ -97,7 +112,8 @@ export const createProduct = (title, imageUrl, description, price) => {
           imageUrl,
           description,
           price,
-          ownerId: userId
+          ownerId: userId,
+          pushToken: pushToken
         }
     });
   }
